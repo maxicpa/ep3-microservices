@@ -118,12 +118,58 @@ El `docker-compose.yml` está configurado con:
 - Límites de memoria por contenedor (512MB)
 - Health checks en todos los servicios
 
-**Deploy en Swarm:**
+### Inicializar el clúster (nodo manager):
 ```bash
 docker swarm init
-docker stack deploy -c docker-compose.yml ep3-stack
-docker stack services ep3-stack
 ```
+
+### Agregar un nodo worker:
+```bash
+# En el nodo manager, obtener el token:
+docker swarm join-token worker
+
+# En el nodo worker, ejecutar:
+docker swarm join --token <TOKEN> <IP_MANAGER>:2377
+```
+
+### Agregar un nodo manager adicional:
+```bash
+docker swarm join-token manager
+docker swarm join --token <TOKEN> <IP_MANAGER>:2377
+```
+
+### Desplegar el stack en Swarm:
+```bash
+docker stack deploy -c docker-compose.yml ep3
+docker stack services ep3
+```
+
+### Escalar servicios dinámicamente:
+```bash
+docker service scale ep3_ms-collaboration=3
+docker service scale ep3_ms-project=2
+docker service ls
+```
+
+### Ver estado del clúster:
+```bash
+docker node ls
+docker service ls
+docker service ps ep3_ms-collaboration
+```
+
+---
+
+## ☁️ Servicios Cloud AWS
+
+### Cola SQS (innovatech-sqs)
+- **ARN:** `arn:aws:sqs:us-east-1:596287682820:innovatech-sqs`
+- **URL:** `https://sqs.us-east-1.amazonaws.com/596287682820/innovatech-sqs`
+- **Propósito:** Comunicación asíncrona entre microservicios. Cuando ms-project crea un proyecto, envía un mensaje a la cola que es consumido por ms-notification para disparar la función serverless.
+
+### API Gateway (innovatech-api)
+- **URL:** `https://u0nb7rzff7.execute-api.us-east-1.amazonaws.com/prod`
+- **Propósito:** Punto de entrada unificado y seguro para los microservicios. Controla el acceso externo al backend.
 
 ---
 
