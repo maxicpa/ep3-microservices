@@ -1,0 +1,16 @@
+{
+  "name": "notification-handler",
+  "version": "1.0.0",
+  "description": "Serverless FaaS function for project notifications - EP3 JVY0101",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "keywords": ["serverless", "faas", "notifications", "microservices"],
+  "author": "Duoc UC - JVY0101",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
